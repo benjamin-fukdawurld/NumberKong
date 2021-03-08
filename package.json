@@ -1,0 +1,40 @@
+{
+    "name": "numberkong",
+    "version": "0.1.0",
+    "description": "A javascript clone of the Numberzilla game logic",
+    "main": "dist/index.js",
+    "scripts": {
+        "start": "node dist/index.js",
+        "watch": "tsc -w",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/benjamin-fukdawurld/NumberKong.git"
+    },
+    "keywords": [
+        "Numberzilla",
+        "puzzle",
+        "game",
+        "number"
+    ],
+    "author": "Benjamin Fukdawurld",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/benjamin-fukdawurld/NumberKong/issues"
+    },
+    "homepage": "https://github.com/benjamin-fukdawurld/NumberKong#readme",
+    "devDependencies": {
+        "@types/node": "^14.14.31",
+        "@types/seedrandom": "^2.4.28",
+        "@typescript-eslint/eslint-plugin": "^4.15.2",
+        "@typescript-eslint/parser": "^4.15.2",
+        "eslint": "^7.21.0",
+        "eslint-config-google": "^0.14.0",
+        "typescript": "^4.2.2"
+    },
+    "dependencies": {
+        "seedrandom": "^3.0.5",
+        "string-hash-64": "^1.0.3"
+    }
+}
