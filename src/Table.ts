@@ -14,8 +14,24 @@ export default class Table {
         this._colCount = 0;
     }
 
-    get colCount() {
+    get colCount(): number {
         return this._colCount;
+    }
+
+    get rowCount(): number {
+        return this._values.length / this.colCount;
+    }
+
+    get values(): number[] {
+        return this._values;
+    }
+
+    get score(): number {
+        return this._values.reduce((accum, current) => accum - (current <= 0 ? 0 : 1), 0);
+    }
+
+    get hash(): number {
+        return stringhash(this._values.join());
     }
 
     get playableMoves(): Move[] {
@@ -46,22 +62,6 @@ export default class Table {
         }
 
         return results;
-    }
-
-    get rowCount() {
-        return this._values.length / this.colCount;
-    }
-
-    get values() {
-        return this._values;
-    }
-
-    get score(): number {
-        return this._values.reduce((accum, current) => accum - (current <= 0 ? 0 : 1), 0);
-    }
-
-    get hash() {
-        return stringhash(this._values.join());
     }
 
     init(colCount: number, rng: Generator<number, void, number> = Table.staticRng()): void {
@@ -113,7 +113,7 @@ export default class Table {
         return result + "\n]";
     }
 
-    play(move: Move | string) {
+    play(move: Move | string): void {
         if (typeof move === "string") {
             move = Move.fromString(move as string);
         }
@@ -170,7 +170,7 @@ export default class Table {
         ];
     }
 
-    append() {
+    append(): void {
         let end = this._values.length - 1;
         while (this.values[end] === 0) {
             --end;
@@ -205,7 +205,7 @@ export default class Table {
         return this.toString();
     }
 
-    assign(data: string | string[] | number[]) {
+    assign(data: string | string[] | number[]): Table {
         if (typeof data === 'string') {
             data = data.split(' ');
         }
