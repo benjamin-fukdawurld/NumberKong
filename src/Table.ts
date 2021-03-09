@@ -9,9 +9,9 @@ import stringhash from "string-hash-64";
 export default class Table {
     protected _values: number[];
     protected _colCount: number;
-    constructor() {
-        this._values = [];
-        this._colCount = 0;
+    constructor(colCount: number = 0, values: number[] = []) {
+        this._values = values;
+        this._colCount = colCount;
     }
 
     get colCount(): number {
