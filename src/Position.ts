@@ -2,9 +2,15 @@ export default class Position {
     private static regexPattern = /r(\d+)c(\d+)/;
     private _row: number;
     private _col: number
-    constructor(pos?: { row: number, col: number }) {
-        this._row = pos?.row ?? 0;
-        this._col = pos?.col ?? 0;
+    constructor(pos?: { row: number, col: number } | string) {
+        this._row = 0;
+        this._col = 0;
+        if (typeof pos === "string") {
+            this.assign(pos);
+        } else if (pos) {
+            this.row = pos.row;
+            this.col = pos.col;
+        }
     }
 
     get row(): number {
@@ -36,7 +42,7 @@ export default class Position {
     }
 
     static fromString(str: string): Position {
-        return this.fromJSON(str);
+        return new Position().assign(str);
     }
 
     toJSON(): string {
@@ -55,7 +61,7 @@ export default class Position {
         if (typeof data === "string") {
             let array = Position.regexPattern.exec(data as string);
             if (array === null || array.length < 3) {
-                throw new Error(`Parse error: input does not match position pattern`);
+                throw new Error('Parse error: input does not match position pattern');
             }
 
             this.row = parseInt(array[1], 10);
