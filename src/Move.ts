@@ -21,14 +21,14 @@ export default class Move {
     }
 
     toJSON(): string {
-        return this.toString();
+        return JSON.stringify(this.toString());
     }
 
     static fromJSON(str: string): Move {
         return new Move().assign(JSON.parse(str));
     }
 
-    assign(data: string | [string, string] | string[][]): Move {
+    assign(data: string | [string, string] | [string[], string[]]): Move {
         if (typeof data === 'string') {
             data = data.split(' ') as [string, string];
         }
