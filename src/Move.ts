@@ -1,8 +1,16 @@
 import Position from './Position';
 
 export default class Move {
-    constructor(public positions: [Position, Position] =
-        [new Position(), new Position()]) { }
+    public positions: [Position, Position];
+    constructor(positions: [Position, Position] | string =
+        [new Position(), new Position()]) {
+        if (typeof positions === "string") {
+            this.positions = [new Position(), new Position()];
+            this.assign(positions);
+        } else {
+            this.positions = positions;
+        }
+    }
 
     toString(): string {
         return `${this.positions[0].toString()} ${this.positions[1].toString()}`;
