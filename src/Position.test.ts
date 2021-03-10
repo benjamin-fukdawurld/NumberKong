@@ -31,8 +31,8 @@ test('test Position serialization', () => {
     let row = 12, col = 11;
     expect(new Position({ row, col }).toString()).toEqual(expectedString);
     expect(new Position(expectedString).toString()).toEqual(expectedString);
-    expect(new Position({ row, col }).toJSON()).toEqual(expectedString);
-    expect(new Position(expectedString).toJSON()).toEqual(expectedString);
+    expect(new Position({ row, col }).toJSON()).toEqual(JSON.stringify(expectedString));
+    expect(new Position(expectedString).toJSON()).toEqual(JSON.stringify(expectedString));
 });
 
 test('test Position unserialization', () => {
