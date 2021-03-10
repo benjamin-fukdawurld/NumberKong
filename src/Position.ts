@@ -46,7 +46,7 @@ export default class Position {
     }
 
     toJSON(): string {
-        return this.toString();
+        return JSON.stringify(this.toString());
     }
 
     static fromJSON(str: string): Position {
