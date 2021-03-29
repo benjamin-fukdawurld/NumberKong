@@ -1,6 +1,6 @@
 {
     "name": "numberkong",
-    "version": "0.1.2",
+    "version": "1.0.0",
     "description": "A javascript clone of the Numberzilla game logic",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
