@@ -10,6 +10,14 @@ export default class Table {
     protected _values: number[];
     protected _colCount: number;
     constructor(colCount: number = 0, values: number[] = []) {
+        if (colCount < 0) {
+            throw new Error('Table column count must be greater or equal to 0');
+        }
+
+        if (colCount && values.length && values.length % colCount > 0) {
+            throw new Error('Table values length must be a multiple of column count');
+        }
+
         this._values = values;
         this._colCount = colCount;
     }
@@ -86,21 +94,41 @@ export default class Table {
     }
 
     row(index: number): Row {
+        if (index < 0 || !Number.isInteger(index) || index >= this.rowCount) {
+            throw new Error(`Cannot get row: index must be a valid integer in range [0, ${this.rowCount - 1}]`)
+        }
+
         return new Row(this, index);
     }
 
     cell(row: number, col: number): Cell {
-        if (!Number.isInteger(row) || !Number.isInteger(col)) {
+        if (row < 0 || row >= this.rowCount || !Number.isInteger(row)
+            || col < 0 || col >= this.colCount || !Number.isInteger(col)) {
             throw new Error(`Cannot get cell(${row}, ${col}): invalid position`);
         }
+
         return new Cell(this.row(row), col);
     }
 
     value(row: number, col: number): number {
+        if (row < 0 || row >= this.rowCount || !Number.isInteger(row)
+            || col < 0 || col >= this.colCount || !Number.isInteger(col)) {
+            throw new Error(`Cannot get value(${row}, ${col}): invalid position`);
+        }
+
         return this._values[row * this.colCount + col];
     }
 
     setValue(row: number, col: number, value: number): void {
+        if (row < 0 || row >= this.rowCount || !Number.isInteger(row)
+            || col < 0 || col >= this.colCount || !Number.isInteger(col)) {
+            throw new Error(`Cannot set value(${row}, ${col}): invalid position`);
+        }
+
+        if (!Number.isInteger(value)) {
+            throw new Error(`Cannot set value(${row}, ${col}): invalid value '${value}'`);
+        }
+
         this._values[row * this.colCount + col] = value;
     }
 
@@ -118,20 +146,25 @@ export default class Table {
             move = Move.fromString(move as string);
         }
 
+        if (move.positions[0].row === move.positions[1].row
+            && move.positions[0].col === move.positions[1].col) {
+            throw new Error("Move must be two different cells");
+        }
+
         let cell1 = this.cell(move.positions[0].row, move.positions[0].col);
         let cell2 = this.cell(move.positions[1].row, move.positions[1].col);
 
         if (cell1.isSolved) {
-            throw new Error(`cell(${cell1.row.index}, ${cell1.index}) is already solved`);
+            throw new Error(`cell(${cell1.row.index}, ${cell1.column}) is already solved`);
         }
 
         if (cell2.isSolved) {
-            throw new Error(`cell(${cell2.row.index}, ${cell2.index}) is already solved`);
+            throw new Error(`cell(${cell2.row.index}, ${cell2.column}) is already solved`);
         }
 
         if (!cell1.match(cell2)) {
             throw new Error(
-                `cell(${cell1.row.index}, ${cell1.index}) does not match cell(${cell2.row.index}, ${cell2.index})`
+                `cell(${cell1.row.index}, ${cell1.column}) does not match cell(${cell2.row.index}, ${cell2.column})`
             );
         }
 
@@ -152,9 +185,9 @@ export default class Table {
     }
 
     removeRow(index: number): void {
-        if (index < 0 || index > this.rowCount) {
+        if (index < 0 || index >= this.rowCount) {
             throw new Error(
-                `Cannot remove row n°${index}: invalid index, index must be in range [0, ${this.rowCount}]`
+                `Cannot remove row n°${index}: invalid index, index must be in range [0, ${this.rowCount - 1}]`
             );
         }
 
@@ -198,17 +231,22 @@ export default class Table {
     }
 
     static fromString(str: string): Table {
-        return this.fromJSON(str);
+        return new Table().assign(str);
     }
 
     toJSON(): string {
-        return this.toString();
+        return JSON.stringify(this.toString());
+    }
+
+    static fromJSON(str: string): Table {
+        return Table.fromString(JSON.parse(str));
     }
 
     assign(data: string | string[] | number[]): Table {
         if (typeof data === 'string') {
             data = data.split(' ');
         }
+
         const toInt = (val: string | number) => {
             let result = typeof val === 'string' ? parseInt(val) : Math.floor(val);
             if (Number.isNaN(result)) {
@@ -226,10 +264,6 @@ export default class Table {
         this._values = data.slice(1).map((cell: string | number) => toInt(cell));
 
         return this;
-    }
-
-    static fromJSON(str: string): Table {
-        return new Table().assign(JSON.parse(str));
     }
 
     static *staticRng(): Generator<number, void, number> {
