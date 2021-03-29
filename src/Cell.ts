@@ -3,11 +3,15 @@ import Position from './Position';
 import Table from './Table';
 
 export default class Cell {
-    readonly row: Row;
-    readonly index: number;
-    constructor(row: Row, index: number) {
-        this.row = row;
-        this.index = index;
+    constructor(readonly row: Row, readonly column: number) {
+        if (this.column < 0 || this.column >= this.row.colCount) {
+            throw new Error(
+                `Cannot create cell with column '${this.column}', column must be in range [0, ${this.row.colCount - 1}]`);
+        }
+    }
+
+    get index() {
+        return this.column;
     }
 
     get table(): Table {
@@ -15,16 +19,16 @@ export default class Cell {
     }
 
     get value() {
-        return this.row.value(this.index);
+        return this.row.value(this.column);
     }
 
     set value(value: number) {
-        this.row.setValue(this.index, value);
+        this.row.setValue(this.column, value);
     }
 
     get position(): Position {
         return new Position({
-            col: this.index,
+            col: this.column,
             row: this.row.index
         });
     }
@@ -39,7 +43,7 @@ export default class Cell {
 
     solve(): void {
         if (this.isSolved) {
-            throw new Error(`cell(${this.row.index}, ${this.index}) is already solved`);
+            throw new Error(`cell(${this.row.index}, ${this.column}) is already solved`);
         }
 
         this.value *= -1;
@@ -72,8 +76,8 @@ export default class Cell {
     get left(): Cell | null {
         let colCount = this.table.colCount;
         let rowIndex = this.row.index;
-        let colIndex = this.index - 1;
-        do {
+        let colIndex = this.column - 1;
+        while (true) {
             if (colIndex < 0) {
                 colIndex = colCount - 1;
                 --rowIndex;
@@ -82,21 +86,23 @@ export default class Cell {
                 }
             }
 
+            if (rowIndex === this.row.index && colIndex === this.column) {
+                return null;
+            }
+
             if (this.table.value(rowIndex, colIndex) > 0) {
                 return this.table.cell(rowIndex, colIndex);
             }
 
             --colIndex;
-        } while (rowIndex != this.row.index || colIndex != this.index);
-
-        return null;
+        }
     }
 
     get right(): Cell | null {
         let colCount = this.table.colCount;
         let rowIndex = this.row.index;
-        let colIndex = this.index + 1;
-        do {
+        let colIndex = this.column + 1;
+        while (true) {
             if (colIndex >= colCount) {
                 colIndex = 0;
                 ++rowIndex;
@@ -105,47 +111,45 @@ export default class Cell {
                 }
             }
 
+            if (rowIndex === this.row.index && colIndex === this.column) {
+                return null;
+            }
+
             if (this.table.value(rowIndex, colIndex) > 0) {
                 return this.table.cell(rowIndex, colIndex);
             }
 
             ++colIndex;
-        } while (rowIndex != this.row.index || colIndex != this.index);
-
-        return null;
+        }
     }
 
     get top(): Cell | null {
         let rowIndex = this.row.index;
-        let colIndex = this.index;
-        do {
+        let colIndex = this.column;
+        while (true) {
             --rowIndex;
             if (rowIndex < 0) {
-                break;
+                return null;
             }
 
             if (this.table.value(rowIndex, colIndex) > 0) {
                 return this.table.cell(rowIndex, colIndex);
             }
-        } while (rowIndex != this.row.index || colIndex != this.index);
-
-        return null;
+        }
     }
 
     get bottom(): Cell | null {
         let rowIndex = this.row.index;
-        let colIndex = this.index;
-        do {
+        let colIndex = this.column;
+        while (true) {
             ++rowIndex;
             if (rowIndex >= this.table.rowCount) {
-                break;
+                return null;
             }
 
             if (this.table.value(rowIndex, colIndex) > 0) {
                 return this.table.cell(rowIndex, colIndex);
             }
-        } while (rowIndex != this.row.index || colIndex != this.index);
-
-        return null;
+        }
     }
 }
