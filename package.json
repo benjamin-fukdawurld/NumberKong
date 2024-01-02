@@ -1,46 +1,17 @@
 {
-    "name": "numberkong",
-    "version": "1.0.0",
-    "description": "A javascript clone of the Numberzilla game logic",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "scripts": {
-        "start": "node dist/index.js",
-        "prepublish": "tsc",
-        "watch": "tsc -w",
-        "test": "jest --coverage"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/benjamin-fukdawurld/NumberKong.git"
-    },
-    "keywords": [
-        "Numberzilla",
-        "puzzle",
-        "game",
-        "number"
-    ],
-    "author": "Benjamin Fukdawurld",
-    "license": "Apache-2.0",
-    "bugs": {
-        "url": "https://github.com/benjamin-fukdawurld/NumberKong/issues"
-    },
-    "homepage": "https://github.com/benjamin-fukdawurld/NumberKong#readme",
-    "devDependencies": {
-        "@types/jest": "^26.0.20",
-        "@types/node": "^14.14.31",
-        "@types/seedrandom": "^2.4.28",
-        "@typescript-eslint/eslint-plugin": "^4.15.2",
-        "@typescript-eslint/parser": "^4.15.2",
-        "eslint": "^7.21.0",
-        "eslint-config-google": "^0.14.0",
-        "jest": "^26.6.3",
-        "ts-jest": "^26.5.3",
-        "ts-node": "^9.1.1",
-        "typescript": "^4.2.2"
-    },
-    "dependencies": {
-        "seedrandom": "^3.0.5",
-        "string-hash-64": "^1.0.3"
-    }
+  "name": "@numberkong/source",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {},
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "@nx/js": "17.2.8",
+    "@nx/workspace": "17.2.8",
+    "@swc-node/register": "~1.6.7",
+    "@swc/core": "~1.3.85",
+    "nx": "17.2.8",
+    "prettier": "^2.6.2",
+    "typescript": "~5.2.2"
+  }
 }
