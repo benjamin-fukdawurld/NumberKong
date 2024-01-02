@@ -1,0 +1,11 @@
+{
+  "vitest.exclude": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/cypress/**",
+    "**/.{idea,git,cache,output,temp}/**"
+  ],
+  "vitest.include": [
+    "packages/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"
+  ]
+}
